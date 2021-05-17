@@ -3,6 +3,7 @@ import subprocess
 import speech_recognition as sr
 import main
 from ctypes import *
+
 def commands(choice):
     so_file="/home/wahajk/Project/Voice-Controlled-Shell/Project/test.so"
     functions=CDLL(so_file)
@@ -37,8 +38,6 @@ def commands(choice):
     # print("28. Who created you?")
     # print("29. Create random file")
     # print("30. Open Visual Code Editor")
-    # print("Press 0 to Exit")
-    # choice=int(input("Enter your choice: "))
 
     if "list files" in choice:
         if(flag==0):
@@ -338,11 +337,25 @@ def commands(choice):
             functions.multipurpose(bcom)
             main.speak_to_speaker(name + "file is opened.")
         elif(flag==1):
+            main.speak_to_speaker("Tell the file name")
+            res = main.recognize_speech_from_mic(sr.Recognizer(),sr.Microphone())
+            res["transcription"] += ".*"
+            name=res["transcription"]
+            fcom="cd ~;file "+name
+            bcom=bytes(fcom,'utf-8')
             functions.argtypes=[c_char_p]
-            functions.multipurpose(b"cd ~;file fname")
+            functions.multipurpose(bcom)
+            main.speak_to_speaker(name + "file is opened.")
         elif(flag==-1):
+            main.speak_to_speaker("Tell the file name")
+            res = main.recognize_speech_from_mic(sr.Recognizer(),sr.Microphone())
+            res["transcription"] += ".*"
+            name=res["transcription"]
+            fcom="cd /;file "+name
+            bcom=bytes(fcom,'utf-8')
             functions.argtypes=[c_char_p]
-            functions.multipurpose(b"cd /;file fname")
+            functions.multipurpose(bcom)
+            main.speak_to_speaker(name + "file is opened.")
         
     elif "open code editor" in choice:
         if(flag==0):
@@ -470,26 +483,26 @@ def commands(choice):
             main.speak_to_speaker(res + " user does not exists.")
             print(res + " user does not exists.")
 
-    elif "delete user" in choice:
-        main.speak_to_speaker("Tell the user name")
-        res = main.recognize_speech_from_mic(sr.Recognizer(),sr.Microphone())
-        name = str(res["transcription"])
-        r = "/home" + name
-        if os.path.exists(r):
-            main.speak_to_speaker("Are you sure you want to delete " + res + " ?")
-            res1 = main.recognize_speech_from_mic(sr.Recognizer(),sr.Microphone())
-            if "yes" in res1:
-                fcom="sudo deluser "+name+" -remove-home"
-                bcom=bytes(fcom,'utf-8')
-                functions.argtypes=[c_char_p]
-                functions.multipurpose(bcom)
-                main.speak_to_speaker("Sucessfully deleted the user.")
-            else:
-                print("You refused to delete the user.")
-                main.speak_to_speaker("Unable to delete the user.")
-        else:
-            main.speak_to_speaker(res + " user does not exists.")
-            print(res + " user does not exists.")
+    # elif "delete user" in choice:
+    #     main.speak_to_speaker("Tell the user name")
+    #     res = main.recognize_speech_from_mic(sr.Recognizer(),sr.Microphone())
+    #     name = str(res["transcription"])
+    #     r = "/home" + name
+    #     if os.path.exists(r):
+    #         main.speak_to_speaker("Are you sure you want to delete " + res + " ?")
+    #         res1 = main.recognize_speech_from_mic(sr.Recognizer(),sr.Microphone())
+    #         if "yes" in res1:
+    #             fcom="sudo deluser "+name+" -remove-home"
+    #             bcom=bytes(fcom,'utf-8')
+    #             functions.argtypes=[c_char_p]
+    #             functions.multipurpose(bcom)
+    #             main.speak_to_speaker("Sucessfully deleted the user.")
+    #         else:
+    #             print("You refused to delete the user.")
+    #             main.speak_to_speaker("Unable to delete the user.")
+    #     else:
+    #         main.speak_to_speaker(res + " user does not exists.")
+    #         print(res + " user does not exists.")
     
     elif "create a random file" in choice:
         functions.argtypes=[c_char_p]
