@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <wchar.h>
+#include <io.h>
 #include <stdlib.h>
 
 // cc -fPIC -shared -o test.so test.c

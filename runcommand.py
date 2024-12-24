@@ -5,7 +5,7 @@ import main
 from ctypes import *
 
 def commands(choice):
-    so_file="/home/wahajk/Project/Voice-Controlled-Shell/Project/test.so"
+    so_file="run_command.so"
     functions=CDLL(so_file)
     flag=0
     # print("1. List Files")
